@@ -116,41 +116,64 @@ Example:
         }
       },
 
+      /**
+       * `ref` to the id of the template 
+       */
       ref: {
         type: String,
         notify: true,
         value: 'tempPaperInput'
       },
 
+      /**
+       * `noPadding`, when false, do not apply top-padding of 10px to row labels. This is useful if the template include checkbox for instance. 
+       */
       noPadding: {
         type: Boolean,
         reflectToAttribute: true,
         value: true
       },
 
+      /**
+       * `rows` array for the rows. Row item must be in the form of '{label: "rowLabel", key: "rowKey" }''
+       */
       rows: {
         type: Array
       },
 
+      /**
+       * `hideRowLabel` if true, row labels are not displayed
+       */
       hideRowLabel: {
         type: Boolean,
         value: false
       },
-
+      /**
+       * `columns` array for the columns. Column item must be in the form of '{label: "colLabel", key: "colKey" }''
+       */
       columns: {
         type: Array
       },
 
+      /**
+       * `hideColumnLabel` if true, column labels are not displayed
+       */
       hideColumnLabel: {
         type: Boolean,
         value: false
       },
 
+      /**
+       * `rowFocus` ref to the index of the row currently having focus
+       */
       rowFocus: {
         type: Number,
         observer: '__onRowFocus'
       },
 
+      /**
+       * `colFocus` ref to the index of the column currently having focus
+       */
       colFocus: {
         type: Number,
         observer: '__onColFocus'
@@ -163,8 +186,8 @@ Example:
       // 'matrix-che-changed': '__matrixValueChanged',
     },
 
-    __getPaddingCls :function(noPadding) {
-        return noPadding ? '' : 'need-padding';
+    __getPaddingCls: function(noPadding) {
+      return noPadding ? '' : 'need-padding';
     },
 
     __onRowFocus: function(index) {
