@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
   <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
   <link rel="import" href="../../paper-input/paper-input.html">
+  <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
   <link rel="import" href="../paper-input-matrix.html">
 </head>
 
@@ -28,9 +29,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <demo-snippet class="centered-demo">
       <template>
         <template is="dom-bind" id="app">
-          <paper-input-matrix  data="{{data}}" id="matrix">
+            <paper-input-matrix data="{{data}}" ref="tempPaperCheck"  id="matrix">
             <template id="tempPaperInput"  is="dom-template">
-              <paper-input on-blur="__onBlur"  on-focus="__onFocus" type="number" on-value-changed="__onValueChanged" no-label-float class="flex matrix-input" data-key$="[[bindKey]]" value="{{data}}"></paper-input>
+              <paper-input type="number" no-label-float class="flex matrix-input" data-key$="[[bindKey]]" value="{{data}}"></paper-input>
+            </template>
+            <template id="tempPaperCheck"  is="dom-template">
+              <paper-checkbox no-label-float class="flex matrix-input" data-key$="[[bindKey]]" checked="{{data}}"></paper-checkbox>
             </template>
           </paper-input-matrix>
           <div>first value : [[data.first.col2]]</div>
@@ -44,20 +48,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
   window.addEventListener('WebComponentsReady', function() {
     app = document.querySelector('#app');
-    app.__onValueChanged= function(e) {
-      // console.info('__onValueChange');
-      this.set('data.' + e.currentTarget.dataset.key, e.detail.value )
-    }
-  
-    app.__onFocus= function(e) {
-      this.$.matrix.colFocus = e.model.colIndex ;
-      this.$.matrix.rowFocus = e.model.rowIndex ;
-    };
-
-    app.__onBlur= function(e) {
-      this.$.matrix.colFocus = null;
-      this.$.matrix.rowFocus = null ;
-    };
 
     matrix = app.$.matrix;
     app.data = {
