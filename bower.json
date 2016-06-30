@@ -4,7 +4,7 @@
   "authors": [
     "Christophe Geiser <christophe.geiser@gmail.com>"
   ],
-  "description": "use input templates (e.g. paper-input or paper-checkbox) in a matrix. ",
+  "description": "use input templates (e.g. paper-input or paper-checkbox) in a matrix.",
   "keywords": [
     "web-component",
     "polymer",
