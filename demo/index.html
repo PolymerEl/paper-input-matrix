@@ -29,14 +29,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <demo-snippet class="centered-demo">
       <template>
         <template is="dom-bind" id="app">
-            <paper-input-matrix data="{{data}}" ref="tempPaperCheck"  id="matrix">
-            <template id="tempPaperInput"  is="dom-template">
+          <h3>paper input matrix</h3>
+          <paper-input-matrix data="{{data}}" id="matrix">
+            <template id="tempPaperInput" is="dom-template">
               <paper-input type="number" no-label-float class="flex matrix-input" data-key$="[[bindKey]]" value="{{data}}"></paper-input>
             </template>
-            <template id="tempPaperCheck"  is="dom-template">
+          </paper-input-matrix>
+          <br>
+          <h3>paper checkbox matrix</h3>
+          <paper-input-matrix data="{{data2}}" no-padding ref="tempPaperCheck" id="matrix2">
+            <template id="tempPaperCheck" is="dom-template">
               <paper-checkbox no-label-float class="flex matrix-input" data-key$="[[bindKey]]" checked="{{data}}"></paper-checkbox>
             </template>
           </paper-input-matrix>
+          <br>
+          <h3>Check binding</h3>
           <div>first value : [[data.first.col2]]</div>
           <div>second value : [[data.second.col2]]</div>
           <div>third value : [[data.third.col2]]</div>
@@ -50,25 +57,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     app = document.querySelector('#app');
 
     matrix = app.$.matrix;
+    matrix2 = app.$.matrix2;
     app.data = {
       first: {
-        col2:2
+        col2: 2
       },
       second: 3
     };
+    app.data2 = {
+      first: {
+        col3: true
+      },
+      second: {
+        col1: true
+      }
+    };
 
-    matrix.rows = [{
+
+    matrix.rows = matrix2.rows = [{
       label: 'first',
       key: 'first'
     }, {
-      label: 'second LOOOOOONg label',
+      label: 'second label',
       key: 'second'
     }, {
       label: 'third',
       key: 'third'
     }];
-    
-  matrix.columns = [{
+
+    matrix.columns = matrix2.columns = [{
       label: 'col1',
       key: 'col1'
     }, {
