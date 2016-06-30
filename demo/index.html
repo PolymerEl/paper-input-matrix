@@ -28,11 +28,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <demo-snippet class="centered-demo">
       <template>
         <template is="dom-bind" id="app">
-          <paper-input-matrix id="matrix">
-            <template id="templ" is="dom-template">
-              <paper-input label="[[item.label]]" value="{{item.label}}"></paper-input>
+          <paper-input-matrix data="{{data}}" id="matrix">
+            <template id="tempPaperInput"  is="dom-template">
+              <paper-input on-value-changed="__onValueChanged" class="flex" data-key$="[[bindKey]]" label="[[row.label]]" value="{{data}}"></paper-input>
             </template>
           </paper-input-matrix>
+          <div>first value : [[data.first.col2]]</div>
+          <div>second value : [[data.second.col2]]</div>
+          <div>third value : [[data.third.col2]]</div>
+          <paper-input label="easy binding" value="{{data.first.col2}}"></paper-input>
         </template>
       </template>
     </demo-snippet>
@@ -40,7 +44,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
   window.addEventListener('WebComponentsReady', function() {
     app = document.querySelector('#app');
+    app.__onValueChanged= function(e) {
+      // console.info('__onValueChange');
+      this.set('data.' + e.currentTarget.dataset.key, e.detail.value )
+    }
+
     matrix = app.$.matrix;
+    app.data = {
+      first: {
+        col2:2
+      },
+      second: 3
+    };
+
     matrix.rows = [{
       label: 'first',
       key: 'first'
@@ -50,6 +66,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }, {
       label: 'third',
       key: 'third'
+    }];
+    
+  matrix.columns = [{
+      label: 'col1',
+      key: 'col1'
+    }, {
+      label: 'col2',
+      key: 'col2'
+    }, {
+      label: 'col3',
+      key: 'col3'
     }];
 
   });
