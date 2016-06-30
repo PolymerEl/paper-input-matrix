@@ -28,9 +28,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <demo-snippet class="centered-demo">
       <template>
         <template is="dom-bind" id="app">
-          <paper-input-matrix data="{{data}}" id="matrix">
+          <paper-input-matrix  data="{{data}}" id="matrix">
             <template id="tempPaperInput"  is="dom-template">
-              <paper-input on-value-changed="__onValueChanged" class="flex" data-key$="[[bindKey]]" label="[[row.label]]" value="{{data}}"></paper-input>
+              <paper-input on-blur="__onBlur"  on-focus="__onFocus" type="number" on-value-changed="__onValueChanged" no-label-float class="flex matrix-input" data-key$="[[bindKey]]" value="{{data}}"></paper-input>
             </template>
           </paper-input-matrix>
           <div>first value : [[data.first.col2]]</div>
@@ -48,6 +48,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // console.info('__onValueChange');
       this.set('data.' + e.currentTarget.dataset.key, e.detail.value )
     }
+  
+    app.__onFocus= function(e) {
+      this.$.matrix.colFocus = e.model.colIndex ;
+      this.$.matrix.rowFocus = e.model.rowIndex ;
+    };
+
+    app.__onBlur= function(e) {
+      this.$.matrix.colFocus = null;
+      this.$.matrix.rowFocus = null ;
+    };
 
     matrix = app.$.matrix;
     app.data = {
@@ -61,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       label: 'first',
       key: 'first'
     }, {
-      label: 'second',
+      label: 'second LOOOOOONg label',
       key: 'second'
     }, {
       label: 'third',

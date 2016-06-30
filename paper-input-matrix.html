@@ -10,7 +10,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html">
 <!-- <link rel="import" href="../bower_components/paper-input/paper-input.html"> -->
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="dom-ref.html">
+<link rel="import" href="../paper-styles/typography.html">
+<link rel="import" href="dom-ref-matrix.html">
 <!--
 An element providing a solution to no problem in particular.
 
@@ -38,24 +39,64 @@ Example:
     
     .row-label {
       width: 150px;
+      text-align:right;
+      padding-top: 10px;
     }
+    
+    .col-label {
+      padding: 0 5px;
+    }
+
     
     .row {
       @apply(--layout-horizontal);
     }
     
+    label {
+      color: var(--paper-input-container-color, --secondary-text-color);
+      /* -webkit-transition: -webkit-transform 0.25s, width 0.25s;
+        transition: transform 0.25s, width 0.25s;
+        -webkit-transform-origin: left top;
+        transform-origin: left top;*/
+      @apply(--paper-font-common-nowrap);
+      @apply(--paper-font-subhead);
+      @apply(--paper-input-container-label);
+      @apply(--paper-transition-easing);
+    }
+    
+    label.label-is-highlighted {
+      color: var(--paper-input-container-focus-color, --primary-color);
+      font-weight: bolder;: 
+      @apply(--paper-input-container-label-focus);
+    }
+    
     ::content .flex {
       @apply(--layout-flex);
     }
+    
+    ::content .matrix-input {
+      padding: 0 5px;
+      @apply(--paper-input-matrix-input);
+    }
     </style>
-    <template is="dom-repeat" items="{{rows}}" as="row" index-as="indexRow">
+    <template is="dom-if" if="{{!hideColumnLabel}}">
+      <div class="row">
+        <template is="dom-if" if="{{!hideRowLabel}}">
+          <label class="row-label" for=""></label>
+        </template>
+        <template is="dom-repeat" items="{{columns}}" as="col" index-as="indexCol">
+          <label class="col-label flex" for="">{{col.label}}</label>
+        </template>
+      </div>
+    </template>
+    <template is="dom-repeat" items="{{rows}}" as="row" index-as="rowIndex">
       <!-- {{item}} and {{index}} can be used in this binding scope -->
       <div class="row">
         <template is="dom-if" if="{{!hideRowLabel}}">
           <label class="row-label" for="">{{row.label}}</label>
         </template>
-         <template is="dom-repeat" items="{{columns}}" as="col" index-as="indexCol">
-          <template is="dom-ref" col="[[col]]" row="[[row]]" col-index="[[colIndex]]" row-index="[[rowIndex]]" data="{{data}}" bind-key="[[row.key]].[[col.key]]" ref="tempPaperInput"></template>
+        <template is="dom-repeat" items="{{columns}}" as="col" index-as="colIndex">
+          <template is="dom-ref-matrix" col="[[col]]" row="[[row]]" col-index="[[colIndex]]" row-index="[[rowIndex]]" data="{{data}}" bind-key="[[row.key]].[[col.key]]" ref="{{ref}}"></template>
         </template>
       </div>
     </template>
@@ -76,6 +117,12 @@ Example:
         }
       },
 
+      ref: {
+        type: String,
+        notify: true,
+        value: 'tempPaperInput'
+      },
+
       rows: {
         type: Array
       },
@@ -93,14 +140,40 @@ Example:
         type: Boolean,
         value: false
       },
+
+      rowFocus: {
+        type: Number,
+        observer: '__onRowFocus'
+      },
+
+      colFocus: {
+        type: Number,
+        observer: '__onColFocus'
+      }
     },
     listeners: {
-      // 'input': '__onInput',
-        // 'bind-value-changed': '_onBindChanged',
-        // 'dom-ref-change': '__onDomRefChange',
-        // 'change': '__onChange',
-        // 'value-change': '__onValueChange'
+
+      // 'bind-value-changed': '_onBindChanged',
+      // 'dom-ref-change': '__onDomRefChange',
+      // 'change': '__onChange',
+      // 'value-change': '__onValueChange'
     },
+
+    __onRowFocus: function(index) {
+      var me = this;
+      Polymer.dom(this.root).querySelectorAll('.row-label').forEach(function(el, i){
+        me.toggleClass('label-is-highlighted', (i - 1)  === index, el);
+      });
+    },
+
+    __onColFocus: function(index) {
+      var me = this;
+      Polymer.dom(this.root).querySelectorAll('.col-label').forEach(function(el, i){
+        me.toggleClass('label-is-highlighted', i  === index, el);
+      });
+    },
+
+
 
     // __onInput: function(e) {
     //   console.info('_onInput', e);
@@ -118,9 +191,9 @@ Example:
     //   console.info('_onBindChanged', e);
     // },
 
-// _onInput: function(e) {
-//       console.info('_onInput', e);
-//     },
+    // _onInput: function(e) {
+    //       console.info('_onInput', e);
+    //     },
 
     // listeners: {},
 
