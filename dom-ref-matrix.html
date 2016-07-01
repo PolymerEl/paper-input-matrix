@@ -227,20 +227,22 @@ Polymer({
     domInstance.addEventListener('value-changed', function() {
       this.fire('matrix-value-changed', {
         value: this.value,
-        key: this.dataset.key
+        // key: this.dataset.key
+        key: this.bindKey
       });
     }, true);
 
     domInstance.addEventListener('checked-changed', function() {
       this.fire('matrix-value-changed', {
         value: this.checked,
-        key: this.dataset.key
+        // key: this.dataset.key
+        key: this.bindKey
       });
     }, true);
   },
 
   __stamp: function() {
-    var root, template, templateRoot;
+    var root, template, templateRoot, stamp;
     this._parent = Polymer.dom(this).parentNode;
     root = this._parent;
 
@@ -265,13 +267,28 @@ Polymer({
     }
 
     // we can now use template.stamp (https://github.com/Polymer/polymer/pull/1889 was merged)
-    templateRoot = template.stamp(this.__prepareBind()).root;
+
+    stamp = template.stamp(this.__prepareBind());
+    // Hack to make sure that dataset attributes are Annotated attribute binding !
+    // stamp._notes.forEach(function(n) {
+    //   n.bindings.forEach(function(b) {
+    //     // if (b.name.startsWith('data-')) {
+    //     if (b.name ==='dataKey') {
+    //       b.kind = 'attribute';
+    //     }
+    //   });
+    // });
+
+    templateRoot = stamp.root;
     // Use this method until this lands: https://github.com/Polymer/polymer/pull/1889
     // templateRoot = (new template.ctor(bind, template)).root;
     this._children = Array.prototype.slice.call(templateRoot.childNodes);
     var ret = Polymer.dom(this._parent).insertBefore(templateRoot, this);
     // we keep a reference to the instance
-    this.__domInstance = this._parent.querySelector('*[data-key="' + this.bindKey + '"]');
+    // this.__domInstance = this._parent.querySelector('*[data-key="' + this.bindKey + '"]');
+
+    //naive approach at getting the created instance
+    this.__domInstance = stamp._nodes[0];
     this.__prepareEvent(this.__domInstance);
     return ret;
   },

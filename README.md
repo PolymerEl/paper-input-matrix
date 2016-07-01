@@ -10,4 +10,5 @@ An element for displaying other Polymer templates in a matrix. Mainly thought to
 	<img src="https://raw.githubusercontent.com/PolymerEl/paper-input-matrix/master/images/paper-input-matrix.png" width="600"></img>
 </div>
 
-
+## TODO 
+- Allow definition of row and column by markup (`<row-item key="myRowKey">MyLabel</row-item>`)

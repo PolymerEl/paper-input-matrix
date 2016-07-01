@@ -32,14 +32,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <h3>paper input matrix</h3>
           <paper-input-matrix data="{{data}}" id="matrix">
             <template id="tempPaperInput" is="dom-template">
-              <paper-input type="number" no-label-float class="flex matrix-input" data-key$="[[bindKey]]" value="{{data}}"></paper-input>
+              <paper-input type="number" no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
             </template>
           </paper-input-matrix>
           <br>
           <h3>paper checkbox matrix</h3>
           <paper-input-matrix data="{{data2}}" no-padding ref="tempPaperCheck" id="matrix2">
             <template id="tempPaperCheck" is="dom-template">
-              <paper-checkbox no-label-float class="flex matrix-input" data-key$="[[bindKey]]" checked="{{data}}"></paper-checkbox>
+              <paper-checkbox no-label-float class="flex matrix-input" bind-key="[[bindKey]]" checked="{{data}}"></paper-checkbox>
             </template>
           </paper-input-matrix>
           <br>
