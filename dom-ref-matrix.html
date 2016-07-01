@@ -72,7 +72,7 @@ Polymer({
      */
     ref: {
       type: String,
-      observer: '__refChanged'
+      observer: '__handleChanged'
     },
 
     /**
@@ -80,17 +80,17 @@ Polymer({
      */
     bind: {
       type: Object,
-      observer: '__bindChanged'
+      observer: '__handleChanged'
     },
 
     col: {
       type: Object,
-      observer: '__bindChanged'
+      observer: '__handleChanged'
     },
 
     row: {
       type: Object,
-      observer: '__bindChanged'
+      observer: '__handleChanged'
     },
 
     colIndex: Number,
@@ -145,17 +145,19 @@ Polymer({
     return this.__removeChildren();
   },
 
-  __refChanged: function(newRef, oldRef) {
-    if (oldRef) {
-      this.__removeChildren();
-      return this.__stamp();
-    }
-  },
+  // __refChanged: function(newRef, oldRef) {
+  //   if (oldRef) {
+  //     this.__removeChildren();
+  //     return this.__stamp();
+  //   }
+  // },
 
-  __bindChanged: function(newBind, oldBind) {
+  __handleChanged: function(newBind, oldBind) {
     if (oldBind) {
-      this.__removeChildren();
-      return this.__stamp();
+      this.debounce('__handleChanged', function(){
+        this.__removeChildren();
+        return this.__stamp();
+      }, 200);
     }
   },
 
