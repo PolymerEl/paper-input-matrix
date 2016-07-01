@@ -1,6 +1,6 @@
 {
   "name": "paper-input-matrix",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "authors": [
     "Christophe Geiser <christophe.geiser@gmail.com>"
   ],
@@ -16,7 +16,7 @@
   ],
   "main": "paper-input-matrix.html",
   "license": "http://polymer.github.io/LICENSE.txt",
-  "homepage": "https://github.com/polymerEl/paper-input-matrix/",
+  "homepage": "https://github.com/polymerEl/paper-input-matrix",
   "ignore": [
     "/.*",
     "/test/"
