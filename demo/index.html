@@ -43,6 +43,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </template>
           </paper-input-matrix>
           <br>
+          <h3>Matrix with two different templates</h3>
+          <paper-input-matrix data="{{data3}}" no-padding ref="tempPaperInput" id="matrix3">
+            <template id="tempPaperInputNumber" is="dom-template">
+              <paper-input type="number" no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
+            </template>
+             <template id="tempPaperInputDate" is="dom-template">
+              <paper-input type="date" no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
+            </template>
+            <template id="tempPaperInput" is="dom-template">
+              <paper-input no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
+            </template>
+          </paper-input-matrix>
+          <br>
+
           <h3>Check binding</h3>
           <div>first value : [[data.first.col2]]</div>
           <div>second value : [[data.second.col2]]</div>
@@ -58,6 +72,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     matrix = app.$.matrix;
     matrix2 = app.$.matrix2;
+    matrix3 = app.$.matrix3;
     app.data = {
       first: {
         col2: 2
@@ -72,30 +87,51 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         col1: true
       }
     };
+  app.data3 ={};
 
+    // matrix.rows = matrix2.rows = [{
+    //   label: 'first',
+    //   key: 'first'
+    // }, {
+    //   label: 'second label',
+    //   key: 'second'
+    // }, {
+    //   label: 'third',
+    //   key: 'third'
+    // }];
 
-    matrix.rows = matrix2.rows = [{
-      label: 'first',
-      key: 'first'
-    }, {
-      label: 'second label',
-      key: 'second'
-    }, {
-      label: 'third',
-      key: 'third'
-    }];
+    // matrix.columns = matrix2.columns = [{
+    //   label: 'col1',
+    //   key: 'col1'
+    // }, {
+    //   label: 'col2',
+    //   key: 'col2'
+    // }, {
+    //   label: 'col3',
+    //   key: 'col3'
+    // }];
 
-    matrix.columns = matrix2.columns = [{
-      label: 'col1',
+matrix3.columns = [{
+      label: 'this year',
       key: 'col1'
     }, {
-      label: 'col2',
+      label: 'last year',
       key: 'col2'
-    }, {
-      label: 'col3',
-      key: 'col3'
+      
     }];
 
+matrix3.rows = [{
+      label: 'Number',
+      ref: 'tempPaperInputNumber',
+      key: 'first'
+    }, {
+      label: 'Text',
+      key: 'second'
+    }, {
+      label: 'Date',
+      ref: 'tempPaperInputDate',
+      key: 'third'
+    }];
   });
   </script>
 </body>

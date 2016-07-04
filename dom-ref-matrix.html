@@ -154,7 +154,7 @@ Polymer({
 
   __handleChanged: function(newBind, oldBind) {
     if (oldBind) {
-      this.debounce('__handleChanged', function(){
+      this.debounce('__handleChanged', function() {
         this.__removeChildren();
         return this.__stamp();
       }, 200);
@@ -243,6 +243,26 @@ Polymer({
     }, true);
   },
 
+  __getTemplate: function(root, ref) {
+    var template = Polymer.dom(root).querySelector('template#' + ref);
+
+    // Check for templates defined root
+    if (!template) {
+      template = Polymer.dom(root.host).querySelector('template#' + ref);
+    }
+
+    // Check For Light Dom Elements that may be passed to this shadow root (Useful for: `<content></content>`)
+    if (!template) {
+      template = root.host.querySelector('template#' + ref);
+    }
+
+    // Check the whole document
+    if (!template) {
+      template = document.querySelector('template#' + ref);
+    }
+    return template;
+  },
+
   __stamp: function() {
     var root, template, templateRoot, stamp;
     this._parent = Polymer.dom(this).parentNode;
@@ -251,22 +271,8 @@ Polymer({
     while (Polymer.dom(root).parentNode) {
       root = Polymer.dom(root).parentNode;
     }
-    template = Polymer.dom(root).querySelector('template#' + this.ref);
 
-    // Check for templates defined root
-    if (!template) {
-      template = Polymer.dom(root.host).querySelector('template#' + this.ref);
-    }
-
-    // Check For Light Dom Elements that may be passed to this shadow root (Useful for: `<content></content>`)
-    if (!template) {
-      template = root.host.querySelector('template#' + this.ref);
-    }
-
-    // Check the whole document
-    if (!template) {
-      template = document.querySelector('template#' + this.ref);
-    }
+    template = this.__getTemplate(root, this.row.ref || this.col.ref || this.ref);
 
     // we can now use template.stamp (https://github.com/Polymer/polymer/pull/1889 was merged)
 
