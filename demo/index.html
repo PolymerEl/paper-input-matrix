@@ -54,6 +54,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <template id="tempPaperInput" is="dom-template">
               <paper-input no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
             </template>
+              <template id="tempPaperCheck" is="dom-template">
+              <paper-checkbox no-label-float class="flex matrix-input" bind-key="[[bindKey]]" checked="{{data}}"></paper-checkbox>
+            </template>
           </paper-input-matrix>
           <br>
 
@@ -89,27 +92,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     };
   app.data3 ={};
 
-    // matrix.rows = matrix2.rows = [{
-    //   label: 'first',
-    //   key: 'first'
-    // }, {
-    //   label: 'second label',
-    //   key: 'second'
-    // }, {
-    //   label: 'third',
-    //   key: 'third'
-    // }];
+    matrix.rows = matrix2.rows = [{
+      label: 'first',
+      key: 'first'
+    }, {
+      label: 'second label',
+      key: 'second'
+    }, {
+      label: 'third',
+      key: 'third'
+    }];
 
-    // matrix.columns = matrix2.columns = [{
-    //   label: 'col1',
-    //   key: 'col1'
-    // }, {
-    //   label: 'col2',
-    //   key: 'col2'
-    // }, {
-    //   label: 'col3',
-    //   key: 'col3'
-    // }];
+    matrix.columns = matrix2.columns = [{
+      label: 'col1',
+      key: 'col1'
+    }, {
+      label: 'col2',
+      key: 'col2'
+    }, {
+      label: 'col3',
+      key: 'col3'
+    }];
 
 matrix3.columns = [{
       label: 'this year',
@@ -131,6 +134,10 @@ matrix3.rows = [{
       label: 'Date',
       ref: 'tempPaperInputDate',
       key: 'third'
+       }, {
+      label: 'Check',
+      ref: 'tempPaperCheck',
+      key: 'fourth'
     }];
   });
   </script>
