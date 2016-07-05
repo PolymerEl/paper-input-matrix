@@ -1,0 +1,222 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<!-- <link rel="import" href="../bower_components/paper-input/paper-input.html"> -->
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-styles/typography.html">
+<link rel="import" href="dom-ref-matrix.html">
+<!--
+An element for binding input templates into a matrix
+
+### Example :
+
+    <paper-input-matrix></paper-input-matrix>
+
+@element paper-input-matrix
+@demo demo/index.html
+
+<div>
+  <img src="https://raw.githubusercontent.com/PolymerEl/paper-input-matrix/master/images/paper-input-matrix.png" width="600"></img>
+</div>
+
+-->
+<dom-module id="paper-input-matrix">
+  <template>
+    <style is="custom-style"></style>
+    <style>
+    :host {
+      display: block;
+      box-sizing: border-box;
+    }
+    
+    .row-label {
+      width: 150px;
+      text-align: right;
+      @apply(--paper-input-matrix-row-label);
+    }
+    
+    .row-label.need-padding {
+      padding-top: 8px;
+    }
+    
+    .col-label {
+      padding: 0 5px;
+    }
+    
+    .row {
+      @apply(--layout-horizontal);
+      @apply(--paper-input-matrix-row);
+    }
+    
+    .label {
+      cursor:default;
+      color: var(--paper-input-container-color, --secondary-text-color);
+      @apply(--paper-font-common-nowrap);
+      @apply(--paper-font-subhead);
+      @apply(--paper-input-container-label);
+      @apply(--paper-transition-easing);
+    }
+    
+    .label.label-is-highlighted {
+      color: var(--paper-input-container-focus-color, --primary-color);
+      font-weight: bolder;
+      : @apply(--paper-input-container-label-focus);
+    }
+    
+    ::content .flex {
+      @apply(--layout-flex);
+    }
+    
+    ::content .matrix-input {
+      padding: 0 5px;
+      @apply(--paper-input-matrix-input);
+    }
+    </style>
+    <template is="dom-if" if="{{!hideColumnLabel}}">
+      <div class="row">
+        <template is="dom-if" if="{{!hideRowLabel}}">
+          <div class="label row-label" for=""></div>
+        </template>
+        <template is="dom-repeat" items="{{columns}}" as="col" index-as="indexCol">
+          <div class="label col-label flex" for="">{{col.label}}</div>
+        </template>
+      </div>
+    </template>
+    <template is="dom-repeat" items="{{rows}}" as="row" index-as="rowIndex">
+      <div class="row">
+        <template is="dom-if" if="{{!hideRowLabel}}">
+          <div class$="label row-label [[__getPaddingCls(noPadding)]]" for="">{{row.label}}</div>
+        </template>
+        <template is="dom-repeat" items="{{columns}}" as="col" index-as="colIndex">
+          <template is="dom-ref-matrix" col="[[col]]" row="[[row]]" col-index="[[colIndex]]" row-index="[[rowIndex]]" data="{{data}}" bind-key="[[row.key]].[[col.key]]" ref="{{ref}}"></template>
+        </template>
+      </div>
+    </template>
+  </template>
+  <script>
+  Polymer({
+    is: 'paper-input-matrix',
+
+    properties: {
+      /**
+       * `data` to bind input elements with
+       */
+      data: {
+        type: Object,
+        notify: true,
+        value: function() {
+          return {};
+        }
+      },
+
+      /**
+       * `ref` to the id of the template 
+       */
+      ref: {
+        type: String,
+        notify: true,
+        value: 'tempPaperInput'
+      },
+
+      /**
+       * `noPadding`, when false, do not apply top-padding of 10px to row labels. This is useful if the template include checkbox for instance. 
+       */
+      noPadding: {
+        type: Boolean,
+        reflectToAttribute: true,
+        value: false
+      },
+
+      /**
+       * `rows` array for the rows. Row item must be in the form of '{label: "rowLabel", key: "rowKey" }''
+       */
+      rows: {
+        type: Array
+      },
+
+      /**
+       * `hideRowLabel` if true, row labels are not displayed
+       */
+      hideRowLabel: {
+        type: Boolean,
+        value: false
+      },
+      /**
+       * `columns` array for the columns. Column item must be in the form of '{label: "colLabel", key: "colKey" }''
+       */
+      columns: {
+        type: Array
+      },
+
+      /**
+       * `hideColumnLabel` if true, column labels are not displayed
+       */
+      hideColumnLabel: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * `rowFocus` ref to the index of the row currently having focus
+       */
+      rowFocus: {
+        type: Number,
+        observer: '__onRowFocus'
+      },
+
+      /**
+       * `colFocus` ref to the index of the column currently having focus
+       */
+      colFocus: {
+        type: Number,
+        observer: '__onColFocus'
+      }
+    },
+    listeners: {
+      'matrix-focus': '__matrixIndexHandler',
+      'matrix-blur': '__matrixIndexHandler',
+      'matrix-value-changed': '__matrixValueChanged',
+      // 'matrix-che-changed': '__matrixValueChanged',
+    },
+
+    __getPaddingCls: function(noPadding) {
+      return noPadding ? '' : 'need-padding';
+    },
+
+    __onRowFocus: function(index) {
+      var me = this;
+      Polymer.dom(this.root).querySelectorAll('.row-label').forEach(function(el, i) {
+        me.toggleClass('label-is-highlighted', (i - 1) === index, el);
+      });
+    },
+
+    __onColFocus: function(index) {
+      var me = this;
+      Polymer.dom(this.root).querySelectorAll('.col-label').forEach(function(el, i) {
+        me.toggleClass('label-is-highlighted', i === index, el);
+      });
+    },
+
+    __matrixIndexHandler: function(e) {
+      this.colFocus = e.detail.colIndex;
+      this.rowFocus = e.detail.rowIndex;
+    },
+
+    __matrixValueChanged: function(e) {
+      this.set('data.' + e.detail.key, e.detail.value);
+    },
+
+    attached: function() {},
+
+    detached: function() {}
+
+  });
+  </script>
+</dom-module>

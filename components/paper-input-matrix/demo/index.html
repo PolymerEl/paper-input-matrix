@@ -1,0 +1,146 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>paper-input-matrix Demo</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../paper-input/paper-input.html">
+  <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+  <link rel="import" href="../paper-input-matrix.html">
+</head>
+
+<body unresolved>
+  <div class="vertical-section-container centered">
+    <h4>Paper-input-matrix Demo</h4>
+    <p>a matrix for regular paper input needed</p>
+    <demo-snippet class="centered-demo">
+      <template>
+        <template is="dom-bind" id="app">
+          <h3>paper input matrix</h3>
+          <paper-input-matrix data="{{data}}" id="matrix">
+            <template id="tempPaperInput" is="dom-template">
+              <paper-input type="number" no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
+            </template>
+          </paper-input-matrix>
+          <br>
+          <h3>paper checkbox matrix</h3>
+          <paper-input-matrix data="{{data2}}" no-padding ref="tempPaperCheck" id="matrix2">
+            <template id="tempPaperCheck" is="dom-template">
+              <paper-checkbox no-label-float class="flex matrix-input" bind-key="[[bindKey]]" checked="{{data}}"></paper-checkbox>
+            </template>
+          </paper-input-matrix>
+          <br>
+          <h3>Matrix with two different templates</h3>
+          <paper-input-matrix data="{{data3}}" no-padding ref="tempPaperInput" id="matrix3">
+            <template id="tempPaperInputNumber" is="dom-template">
+              <paper-input type="number" no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
+            </template>
+             <template id="tempPaperInputDate" is="dom-template">
+              <paper-input type="date" no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
+            </template>
+            <template id="tempPaperInput" is="dom-template">
+              <paper-input no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
+            </template>
+              <template id="tempPaperCheck" is="dom-template">
+              <paper-checkbox no-label-float class="flex matrix-input" bind-key="[[bindKey]]" checked="{{data}}"></paper-checkbox>
+            </template>
+          </paper-input-matrix>
+          <br>
+
+          <h3>Check binding</h3>
+          <div>first value : [[data.first.col2]]</div>
+          <div>second value : [[data.second.col2]]</div>
+          <div>third value : [[data.third.col2]]</div>
+          <paper-input label="easy binding" value="{{data.first.col2}}"></paper-input>
+        </template>
+      </template>
+    </demo-snippet>
+  </div>
+  <script>
+  window.addEventListener('WebComponentsReady', function() {
+    app = document.querySelector('#app');
+
+    matrix = app.$.matrix;
+    matrix2 = app.$.matrix2;
+    matrix3 = app.$.matrix3;
+    app.data = {
+      first: {
+        col2: 2
+      },
+      second: 3
+    };
+    app.data2 = {
+      first: {
+        col3: true
+      },
+      second: {
+        col1: true
+      }
+    };
+  app.data3 ={};
+
+    matrix.rows = matrix2.rows = [{
+      label: 'first',
+      key: 'first'
+    }, {
+      label: 'second label',
+      key: 'second'
+    }, {
+      label: 'third',
+      key: 'third'
+    }];
+
+    matrix.columns = matrix2.columns = [{
+      label: 'col1',
+      key: 'col1'
+    }, {
+      label: 'col2',
+      key: 'col2'
+    }, {
+      label: 'col3',
+      key: 'col3'
+    }];
+
+matrix3.columns = [{
+      label: 'this year',
+      key: 'col1'
+    }, {
+      label: 'last year',
+      key: 'col2'
+      
+    }];
+
+matrix3.rows = [{
+      label: 'Number',
+      ref: 'tempPaperInputNumber',
+      key: 'first'
+    }, {
+      label: 'Text',
+      key: 'second'
+    }, {
+      label: 'Date',
+      ref: 'tempPaperInputDate',
+      key: 'third'
+       }, {
+      label: 'Check',
+      ref: 'tempPaperCheck',
+      key: 'fourth'
+    }];
+  });
+  </script>
+</body>
+
+</html>

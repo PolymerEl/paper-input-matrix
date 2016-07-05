@@ -1,0 +1,36 @@
+{
+  "name": "paper-input-matrix",
+  "version": "0.4.0",
+  "authors": [
+    "Christophe Geiser <christophe.geiser@gmail.com>"
+  ],
+  "description": "use input templates (e.g. paper-input or paper-checkbox) in a matrix.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed",
+    "material design",
+    "matrix",
+    "paper-input",
+    "paper-checkbox"
+  ],
+  "main": "paper-input-matrix.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/polymerEl/paper-input-matrix",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.5.0",
+    "paper-input": "PolymerElements/paper-input#^1.1.14",
+    "paper-checkbox": "PolymerElements/paper-checkbox#^1.2.1",
+    "paper-styles": "PolymerElements/paper-styles#^1.1.4",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
+    "iron-demo-helpers": "^1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "^4.0.0"
+  }
+}
