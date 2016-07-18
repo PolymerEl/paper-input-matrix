@@ -95,7 +95,8 @@ An element for binding input templates into a matrix
           <div class$="label row-label [[__getPaddingCls(noPadding)]]" for="">{{row.label}}</div>
         </template>
         <template is="dom-repeat" items="{{columns}}" as="col" index-as="colIndex">
-          <template is="dom-ref-matrix" col="[[col]]" row="[[row]]" col-index="[[colIndex]]" row-index="[[rowIndex]]" data="{{data}}" bind-key="[[row.key]].[[col.key]]" ref="{{ref}}"></template>
+          <template is="dom-ref-matrix" bind="{{bind}}" col="[[col]]" row="[[row]]" col-index="[[colIndex]]" row-index="[[rowIndex]]" data="{{data}}" bind-key="[[row.key]].[[col.key]]" ref="{{ref}}">
+          </template>
         </template>
       </div>
     </template>
@@ -116,6 +117,12 @@ An element for binding input templates into a matrix
         }
       },
 
+      bind: {
+        type: Object,
+        value: function() {
+          return {};
+        }
+      }, 
       /**
        * `ref` to the id of the template 
        */
@@ -210,12 +217,13 @@ An element for binding input templates into a matrix
     },
 
     __matrixValueChanged: function(e) {
+      // console.info('_MatrixdataChanged', e, this);
       this.set('data.' + e.detail.key, e.detail.value);
     },
 
-    attached: function() {},
+    // attached: function() {},
 
-    detached: function() {}
+    // detached: function() {}
 
   });
   </script>
