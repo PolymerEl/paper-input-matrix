@@ -46,100 +46,103 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <h3>Matrix with two different templates</h3>
           <paper-input-matrix data="{{data3}}" no-padding ref="tempPaperInput" id="matrix3">
             <template id="tempPaperInputNumber" is="dom-template">
-              <paper-input type="number" no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
+              <paper-input type="number" max="100" no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
             </template>
-             <template id="tempPaperInputDate" is="dom-template">
+            <template id="tempPaperInputDate" is="dom-template">
               <paper-input type="date" no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
             </template>
             <template id="tempPaperInput" is="dom-template">
               <paper-input no-label-float class="flex matrix-input" bind-key="[[bindKey]]" value="{{data}}"></paper-input>
             </template>
-              <template id="tempPaperCheck" is="dom-template">
-              <paper-checkbox no-label-float class="flex matrix-input" bind-key="[[bindKey]]" checked="{{data}}"></paper-checkbox>
+            <template id="tempPaperCheck" is="dom-template">
+              <paper-checkbox no-label-float read-only class="flex matrix-input" bind-key="[[bindKey]]" checked="{{data}}"></paper-checkbox>
             </template>
           </paper-input-matrix>
           <br>
-
           <h3>Check binding</h3>
           <div>first value : [[data.first.col2]]</div>
           <div>second value : [[data.second.col2]]</div>
           <div>third value : [[data.third.col2]]</div>
           <paper-input label="easy binding" value="{{data.first.col2}}"></paper-input>
+          <paper-input label="binding with template"  value="{{data3.first.col1}}"></paper-input>
         </template>
       </template>
     </demo-snippet>
   </div>
   <script>
   window.addEventListener('WebComponentsReady', function() {
-    app = document.querySelector('#app');
+        app = document.querySelector('#app');
 
-    matrix = app.$.matrix;
-    matrix2 = app.$.matrix2;
-    matrix3 = app.$.matrix3;
-    app.data = {
-      first: {
-        col2: 2
-      },
-      second: 3
-    };
-    app.data2 = {
-      first: {
-        col3: true
-      },
-      second: {
-        col1: true
-      }
-    };
-  app.data3 ={};
+        matrix = app.$.matrix;
+        matrix2 = app.$.matrix2;
+        matrix3 = app.$.matrix3;
+        app.data = {
+          first: {
+            col2: 2
+          },
+          second: 3
+        };
+        app.data2 = {
+          first: {
+            col3: true
+          },
+          second: {
+            col1: true
+          }
+        };
+        app.data3 = {
+          first: {
+            col1: 100
+          }};
 
-    matrix.rows = matrix2.rows = [{
-      label: 'first',
-      key: 'first'
-    }, {
-      label: 'second label',
-      key: 'second'
-    }, {
-      label: 'third',
-      key: 'third'
-    }];
+          matrix.rows = matrix2.rows = [{
+            label: 'first',
+            key: 'first'
+          }, {
+            label: 'second label',
+            key: 'second'
+          }, {
+            label: 'third',
+            key: 'third'
+          }];
 
-    matrix.columns = matrix2.columns = [{
-      label: 'col1',
-      key: 'col1'
-    }, {
-      label: 'col2',
-      key: 'col2'
-    }, {
-      label: 'col3',
-      key: 'col3'
-    }];
+          matrix.columns = matrix2.columns = [{
+            label: 'col1',
+            key: 'col1'
+          }, {
+            label: 'col2',
+            key: 'col2'
+          }, {
+            label: 'col3',
+            key: 'col3'
+          }];
 
-matrix3.columns = [{
-      label: 'this year',
-      key: 'col1'
-    }, {
-      label: 'last year',
-      key: 'col2'
-      
-    }];
+          matrix3.columns = [{
+            label: 'this year',
+            key: 'col1'
+          }, {
+            label: 'last year',
+            key: 'col2'
 
-matrix3.rows = [{
-      label: 'Number',
-      ref: 'tempPaperInputNumber',
-      key: 'first'
-    }, {
-      label: 'Text',
-      key: 'second'
-    }, {
-      label: 'Date',
-      ref: 'tempPaperInputDate',
-      key: 'third'
-       }, {
-      label: 'Check',
-      ref: 'tempPaperCheck',
-      key: 'fourth'
-    }];
-  });
+          }];
+
+          matrix3.rows = [{
+            label: 'Number',
+            ref: 'tempPaperInputNumber',
+            key: 'first'
+          }, {
+            label: 'Text',
+            key: 'second'
+          }, {
+            label: 'Date',
+            ref: 'tempPaperInputDate',
+            key: 'third'
+          }, {
+            label: 'Check',
+            ref: 'tempPaperCheck',
+            key: 'fourth'
+          }];
+        });
   </script>
 </body>
 

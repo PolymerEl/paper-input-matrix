@@ -108,7 +108,7 @@ Polymer({
      */
     as: {
       type: String,
-      value: 'item'
+      value: 'bind'
     },
     /**
      * The name of the variable to add to the binding scope for the
@@ -319,7 +319,8 @@ Polymer({
     // this.__domInstance = this._parent.querySelector('*[data-key="' + this.bindKey + '"]');
 
     //naive approach at getting the created instance
-    this.__domInstance = stamp._nodes[0];
+    // this.__domInstance = stamp._nodes[0];
+    this.__domInstance = stamp._nodes[stamp._nodes.length - 1];
     this.__prepareEvent(this.__domInstance);
     return ret;
   },
