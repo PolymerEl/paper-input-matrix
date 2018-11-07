@@ -10,8 +10,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html">
 <!-- <link rel="import" href="../bower_components/paper-input/paper-input.html"> -->
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../paper-styles/typography.html">
-<link rel="import" href="dom-ref-matrix.html">
+<link rel="import" href="dom-matrix.html">
 <!--
 An element for binding input templates into a matrix
 
@@ -29,56 +30,54 @@ An element for binding input templates into a matrix
 -->
 <dom-module id="paper-input-matrix">
   <template>
-    <style is="custom-style"></style>
-    <style>
+    <style include="iron-flex">
     :host {
       display: block;
       box-sizing: border-box;
     }
-    
+
     .row-label {
       width: 150px;
       text-align: right;
-      @apply(--paper-input-matrix-row-label);
+      @apply --paper-input-matrix-row-label;
     }
-    
+
     .row-label.need-padding {
       padding-top: 8px;
     }
-    
+
     .col-label {
       padding: 0 5px;
     }
-    
+
     .row {
-      @apply(--layout-horizontal);
-      @apply(--paper-input-matrix-row);
+      @apply --layout-horizontal;
+      @apply --paper-input-matrix-row;
     }
-    
+
     .label {
-      cursor:default;
-      color: var(--paper-input-container-color, --secondary-text-color);
-      @apply(--paper-font-common-nowrap);
-      @apply(--paper-font-subhead);
-      @apply(--paper-input-container-label);
-      @apply(--paper-transition-easing);
+      cursor: default;
+      color: var(--paper-input-container-color, var(--secondary-text-color));
+      @apply --paper-font-common-nowrap;
+      @apply --paper-font-subhead;
+      @apply --paper-input-container-label;
+      @apply --paper-transition-easing;
+      /*@apply --layout-flex;*/
     }
-    
+
     .label.label-is-highlighted {
-      color: var(--paper-input-container-focus-color, --primary-color);
+      color: var(--paper-input-container-focus-color, var(--primary-color));
       font-weight: bolder;
-      : @apply(--paper-input-container-label-focus);
+      @apply --paper-input-container-label-focus;
     }
+
     
-    ::content .flex {
-      @apply(--layout-flex);
-    }
-    
-    ::content .matrix-input {
+    .matrix-cell {
       padding: 0 5px;
-      @apply(--paper-input-matrix-input);
+      @apply --paper-input-matrix-input;
     }
     </style>
+
     <template is="dom-if" if="{{!hideColumnLabel}}">
       <div class="row">
         <template is="dom-if" if="{{!hideRowLabel}}">
@@ -90,13 +89,14 @@ An element for binding input templates into a matrix
       </div>
     </template>
     <template is="dom-repeat" items="{{rows}}" as="row" index-as="rowIndex">
-      <div class="row">
+      <div class="row" >
         <template is="dom-if" if="{{!hideRowLabel}}">
           <div class$="label row-label [[__getPaddingCls(noPadding)]]" for="">{{row.label}}</div>
         </template>
         <template is="dom-repeat" items="{{columns}}" as="col" index-as="colIndex">
-          <template is="dom-ref-matrix" bind="{{bind}}" col="[[col]]" row="[[row]]" col-index="[[colIndex]]" row-index="[[rowIndex]]" data="{{data}}" bind-key="[[row.key]].[[col.key]]" ref="{{ref}}">
-          </template>
+          <div on-tap="onFocus" on-focusin="onFocus" on-focusout="onBlur" class="matrix-cell flex">
+            <dom-matrix templates="[[templates]]" col="[[col]]" row="[[row]]" col-index="[[colIndex]]" row-index="[[rowIndex]]" _hostdata="{{data}}"></dom-matrix>
+          </div>
         </template>
       </div>
     </template>
@@ -117,19 +117,11 @@ An element for binding input templates into a matrix
         }
       },
 
-      bind: {
-        type: Object,
-        value: function() {
-          return {};
-        }
-      }, 
-      /**
-       * `ref` to the id of the template 
+      /* 
+       * `templates` an object containing key/value templates it is filled on ready.
        */
-      ref: {
-        type: String,
-        notify: true,
-        value: 'tempPaperInput'
+      templates: {
+        type: Object
       },
 
       /**
@@ -186,11 +178,22 @@ An element for binding input templates into a matrix
         observer: '__onColFocus'
       }
     },
-    listeners: {
-      'matrix-focus': '__matrixIndexHandler',
-      'matrix-blur': '__matrixIndexHandler',
-      'matrix-value-changed': '__matrixValueChanged',
-      // 'matrix-che-changed': '__matrixValueChanged',
+
+    get dedaultID() {
+      return 'defaultTemplate';
+    },
+
+    ready() {
+
+      Polymer.RenderStatus.afterNextRender(this, () => {
+
+        // Note(cg): we get all templates and store them in `templates`
+        const templates = {};
+        this.querySelectorAll('template').forEach(t => {
+          templates[`${t.id || this.dedaultID}`] = t;
+        });
+        this.templates = templates;
+      });
     },
 
     __getPaddingCls: function(noPadding) {
@@ -211,20 +214,18 @@ An element for binding input templates into a matrix
       });
     },
 
-    __matrixIndexHandler: function(e) {
-      this.colFocus = e.detail.colIndex;
-      this.rowFocus = e.detail.rowIndex;
+    // XXX(cg): seems focusin is not always fired. For instance, using tab does not fire it, while shift+tab does. 
+    onFocus(e) {
+       if(e.model) {
+        this.colFocus = e.model.colIndex;
+        this.rowFocus = e.model.rowIndex;
+      }
     },
 
-    __matrixValueChanged: function(e) {
-      // console.info('_MatrixdataChanged', e, this);
-      this.set('data.' + e.detail.key, e.detail.value);
-    },
-
-    // attached: function() {},
-
-    // detached: function() {}
-
+    onBlur(e) {
+      this.colFocus = null;
+      this.rowFocus = null;
+    }
   });
   </script>
 </dom-module>

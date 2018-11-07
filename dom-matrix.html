@@ -1,0 +1,201 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/mixins/mutable-data.html">
+<dom-module id="dom-matrix">
+  <script>
+  (function() {
+
+    /**
+     * @constructor
+     * @implements {Polymer_OptionalMutableData}
+     * @extends {Polymer.Element}
+     * @private
+     */
+    const domMatrixBase = Polymer.OptionalMutableData(Polymer.Element);
+    /**
+     * ## DomMatrix
+     *
+     * `<dom-matrix>` an extension of dom-repeat to loop over rows and columns and stamp a template for each
+     *
+     * @memberof PolymerEl
+     * @customElement
+     * @polymer
+     * @demo
+     **/
+    class DomMatrix extends domMatrixBase {
+
+      static get is() { return 'dom-matrix'; }
+
+      static get template() { return null; }
+
+      static get properties() {
+        return {
+          /**
+           * An array containing items determining how many instances of the template
+           * to stamp and that that each template instance should bind to.
+           */
+          row: {
+            type: Object
+          },
+
+          rowIndex: {
+            type: Number
+          },
+          /**
+           * An array containing items determining how many instances of the template
+           * to stamp and that that each template instance should bind to.
+           */
+          col: {
+            type: Object
+          },
+
+          colIndex: {
+            type: Number
+          },
+
+          /* 
+           * `templates` 
+           */
+          templates: {
+            type: Object,
+          },
+
+          /* 
+           * `_tpl` the template to use for this instance
+           */
+          _tpl: {
+            type: Object,
+            observer: '_observeTemplate'
+          },
+
+          /**
+           * The name of the variable to add to the binding scope for the array
+           * element associated with a given template instance.
+           */
+          as: {
+            type: String,
+            value: 'data'
+          },
+
+
+          /* 
+           * `_hostdata` 
+           */
+          _hostdata: {
+            type: Object,
+            value: function() {
+              return {};
+            }
+          },
+        };
+      }
+      static get observers() {
+        return [
+          '_observeTemplates(templates, col, row)',
+          '_observeDataChange(_hostdata.*)',
+        ];
+      }
+
+      constructor() {
+        super();
+
+        this._instanceProps = {
+          colIndex: true,
+          rowIndex: true,
+          row: true,
+          col: true
+        };
+      }
+
+      // connectedCallback() {
+      //   super.connectedCallback();
+      //   this.stampInstance();
+      // }
+
+      get defaultID() {
+        return 'defaultTemplate';
+      }
+
+      _observeTemplates(templates, col, row) {
+        if (templates && col && row) {
+          this._tpl = templates[col.ref || row.ref || this.defaultID];
+        }
+      }
+
+      _observeDataChange(change) {
+        if (this.instance && change.path === `_hostdata.${this.row.key || this.rowIndex}.${this.col.key || this.colIndex}`) {
+          this.instance[this.as] = change.value;
+        }
+      }
+
+      stampInstance() {
+        if (this.__ctor) {
+
+          // Instance the template with an initial data model
+          let model = {};
+          // model[this.as] = item;
+          model.col = this.col;
+          model.colIndex = this.colIndex;
+          model.row = this.row;
+          model.rowIndex = this.rowIndex;
+          model[this.as] = (this._hostdata[this.row.key || this.rowIndex] || {})[this.col.key || this.colIndex];
+
+          this.instance = new this.__ctor(model);
+          this.parentNode.appendChild(this.instance.root);
+        }
+      }
+
+      _observeTemplate(template, old) {
+        if (!this.__ctor || old) {
+          if (template.__ctor) {
+            this.__ctor = template.__ctor;
+          } else {
+
+            this._instanceProps[this.as] = true;
+            // this.__ctor = Polymer.Templatize.templatize(template, this.getRootNode().host, {
+            this.__ctor = Polymer.Templatize.templatize(template, this, {
+              instanceProps: this._instanceProps,
+              parentModel: true,
+
+              // forwardHostProp: function(prop, value) {
+              //   console.info('forwarding', prop, value);
+              // },
+
+              notifyInstanceProp: function(inst, prop, value) {
+                if (Polymer.Path.matches(this.as, prop)) {
+                  let colIndex = inst.col.key || inst.colIndex;
+                  let rowIndex = inst.row.key || inst.rowIndex;
+                  if (prop == this.as) {
+
+                    // this.set(`data.${rowIndex}.${colIndex}`);
+                    this._hostdata = this._hostdata || {};
+                    this._hostdata[rowIndex] = this._hostdata[rowIndex] || {};
+                    this._hostdata[rowIndex][colIndex] = value;
+                  }
+                  let path = Polymer.Path.translate(this.as, `_hostdata.${rowIndex}.${colIndex}`, prop);
+                  this.notifyPath(path, value);
+                }
+              }
+            });
+            template.__ctor = this.__ctor;
+          }
+        }
+        this.stampInstance();
+
+      }
+
+    }
+
+    customElements.define(DomMatrix.is, DomMatrix);
+
+    if (!window.PolymerEl) {
+      window.PolymerEl = {};
+    }
+
+    /* 
+     * @namespace MultiChart
+     */
+    window.PolymerEl.DomMatrix = DomMatrix;
+
+  })();
+  </script>
+</dom-module>
